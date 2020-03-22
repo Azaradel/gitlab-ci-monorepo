@@ -1,0 +1,7 @@
+stages:
+  - install
+  - test
+
+include:
+  - local: ./services/project-one/.gitlab-ci.yml
+  - local: ./services/project-two/.gitlab-ci.yml

@@ -1,0 +1,37 @@
+.project-two:
+  before_script:
+    - cd services/project-two
+  cache:
+    key: $CI_COMMIT_REF_SLUG-project-two
+    policy: pull
+    paths:
+      - services/project-two/vendor
+  only:
+    changes:
+      - services/project-two/**/*
+
+project-two install:
+  extends: .project-two
+  stage: install
+  script:
+    - composer install -n
+  cache:
+    policy: pull-push
+  
+project-two test:
+  extends: .project-two
+  stage: test
+  needs:
+    - project-two install
+  script:
+    - composer install
+    - composer test
+  
+project-two lint:
+  extends: .project-two
+  stage: test
+  needs:
+    - project-two install
+  script:
+    - composer install
+    - composer lint

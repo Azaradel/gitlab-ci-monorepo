@@ -1,0 +1,37 @@
+.project-one:
+  before_script:
+    - cd services/project-one
+  cache:
+    key: $CI_COMMIT_REF_SLUG-project-one
+    policy: pull
+    paths:
+      - services/project-one/node_modules
+  only:
+    changes:
+      - services/project-one/**/*
+
+project-one install:
+  extends: .project-one
+  stage: install
+  script:
+    - yarn install
+  cache:
+    policy: pull-push
+  
+project-one test:
+  extends: .project-one
+  stage: test
+  needs:
+    - project-one install
+  script:
+    - yarn install
+    - yarn run test
+
+project-one lint:
+  extends: .project-one
+  stage: test
+  needs:
+    - project-one install
+  script:
+    - yarn install
+    - yarn run lint
